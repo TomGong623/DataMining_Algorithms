@@ -234,9 +234,7 @@ def DecisionTree(SPs, train):
     DT_list = [root, Lnode, Rnode, Llabel, Rlabel, LLlabel, LRlabel, RLlabel, RRlabel]
     return (DT_list)
 
-
 DT = DecisionTree(SplitPoints, training)
-
 
 def prediction(point, DT):
     for i in range(1, nattr + 1):
@@ -273,7 +271,6 @@ for test in testing:
 
 ### KNN ##########################################
 print('')
-
 
 # get distances between testing point and training points
 def get_distance(point):
