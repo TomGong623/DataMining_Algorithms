@@ -1,7 +1,7 @@
 import sys
-
+import copy
+# initialization
 input_data = []
-
 for row in sys.stdin:
     if "\n" in row:
         input_data.append(row[:-1])
@@ -34,7 +34,7 @@ for i in range(N + 1, N + 1 + k):
         temp.append(float(centroid[j]))
     centroids[i - N - 1] = temp
 
-
+# cluster sample points
 def Clustering(samps, cents):
     for x in samps:
         dists = {}
@@ -48,11 +48,16 @@ def Clustering(samps, cents):
         for c in dists:
             if (dists[c] < dists[Min]):
                 Min = c
-        x[D] = Min
+        for c in dists:
+            if (dists[c] == dists[Min]):
+                if (c < Min):
+                    Min = c
+        x[-1] = Min
     return samps
 
-
+# re-assign centroids
 def AssignCents(samps, cents):
+    Cents = cents
     for x in cents:
         for i in range(D):
             cor = 0
@@ -61,28 +66,20 @@ def AssignCents(samps, cents):
                 if (y[-1] == x):
                     n += 1
                     cor += y[i]
-            cents[x][i] = cor / n
-    return cents
-
-
-def NClusters(samps, cents):
-    nc = {}
-    for cent in cents:
-        nc[cent] = 0
-        for samp in samps:
-            if (samp[-1] == cent):
-                nc[cent] += 1
-    return nc
+            if (n == 0):
+                Cents[x][i] = 0
+            else:
+                Cents[x][i] = cor / n
+    return Cents
 
 
 if __name__ == "__main__":
     cond = True
     while (cond == True):
-        temp = NClusters(samples, centroids)
+        temp = copy.deepcopy(centroids)
         samples = Clustering(samples, centroids)
         centroids = AssignCents(samples, centroids)
-        NC = NClusters(samples, centroids)
-        if (temp != NC):
+        if (temp != centroids):
             cond = True
         else:
             cond = False
